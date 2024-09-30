@@ -1,0 +1,223 @@
+{
+    "version": "0.1.0",
+    "name": "game_platform",
+    "instructions": [
+        {
+            "name": "initialize",
+            "accounts": [
+                {
+                    "name": "master",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "payer",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "createCase",
+            "accounts": [
+                {
+                    "name": "case",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "master",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "authority",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string"
+                },
+                {
+                    "name": "category",
+                    "type": "string"
+                },
+                {
+                    "name": "imageUrl",
+                    "type": "string"
+                },
+                {
+                    "name": "fileLink",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "updateCase",
+            "accounts": [
+                {
+                    "name": "case",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "master",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "authority",
+                    "isMut": true,
+                    "isSigner": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "caseId",
+                    "type": "u32"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string"
+                },
+                {
+                    "name": "category",
+                    "type": "string"
+                },
+                {
+                    "name": "imageUrl",
+                    "type": "string"
+                },
+                {
+                    "name": "fileLink",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "deleteCase",
+            "accounts": [
+                {
+                    "name": "case",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "master",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "authority",
+                    "isMut": true,
+                    "isSigner": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "caseId",
+                    "type": "u32"
+                }
+            ]
+        }
+    ],
+    "accounts": [
+        {
+            "name": "Master",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "lastCaseId",
+                        "type": "u32"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Case",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "id",
+                        "type": "u32"
+                    },
+                    {
+                        "name": "title",
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "name": "category",
+                        "type": "string"
+                    },
+                    {
+                        "name": "imageUrl",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fileLink",
+                        "type": "string"
+                    },
+                    {
+                        "name": "authority",
+                        "type": "publicKey"
+                    }
+                ]
+            }
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "WinnerAlreadyExists",
+            "msg": "Winner already exists"
+        },
+        {
+            "code": 6001,
+            "name": "NoTicket",
+            "msg": "Can't choose a winner when are no ticket"
+        },
+        {
+            "code": 6002,
+            "name": "WinnerNotChosen",
+            "msg": "Winner has not been chosen."
+        },
+        {
+            "code": 6003,
+            "name": "InvalidWinner",
+            "msg": "Invalid winner."
+        },
+        {
+            "code": 6004,
+            "name": "AlreadyClaimed",
+            "msg": "The prize has already been claimed"
+        }
+    ]
+}
