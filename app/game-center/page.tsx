@@ -1,130 +1,83 @@
 'use client'
 
-import Image from 'next/image';
 import { useState } from 'react';
+import Image from 'next/image';
+import GameDetails from './GameDetails';
+
+interface Game {
+    id: number;
+    name: string;
+    tag: string;
+    image: string;
+    description: string,
+}
 
 export default function CoCreator() {
+    const [hovered, setHovered] = useState(false);
+    const [selectedGame, setSelectedGame] = useState<Game | null>(null); // Define Game type here
 
-    <div>111111</div>
+    const games: Game[] = [
+        { id: 1, name: 'Black :Wukong', tag: 'Beta', image: '/fig/Fig1.jpg', description: "" },
+        { id: 2, name: 'Super Mario', tag: 'Beta', image: '/fig/Fig2.jpg', description: "" },
+        { id: 3, name: 'Pokémon', tag: 'Beta', image: '/fig/Fig3.jpg', description: "" },
+        { id: 4, name: 'Naraka', tag: 'Beta', image: '/fig/Fig4.jpg', description: "" },
+        { id: 5, name: 'Frost Punk 2', tag: 'Beta', image: '/fig/frostpunk.png', description: "" },
+        { id: 6, name: 'Planet Coaster', tag: 'Alpha', image: '/fig/planet_coaster.png', description: "" },
+        { id: 7, name: 'Final Fantasy', tag: 'Beta', image: '/fig/fantasy.png', description: "" },
+        { id: 8, name: 'Cyberpunk', tag: 'Alpha', image: '/fig/cyberpunk.png', description: "" },
+    ];
 
-    return(
-        <div>
-      <div className="header">
-        Decentralized Value Co-Creation &nbsp;&nbsp; Creator &nbsp;&nbsp; Co-Creator &nbsp;&nbsp; Investor &nbsp;&nbsp; <b>User</b>
-      </div>
-      <div className="container">
-        <div className="column">
-          <div className="title">🎮 All Games</div>
+    return (
+        <div className="mx-20 my-5 text-gray-800">
+            <h1 className="text-2xl font-bold text-gray-800 mb-5">Games Are Ready To Play</h1>
 
-          <div className="work">
-            <div className="work-header">
-              <span>Work 1</span>
-              {/* <span>${values[0]}</span> */}
+            <div className="grid grid-cols-8 gap-4 mb-5">
+                {games.map((game) => (
+                    <div
+                        key={game.id}
+                        className="bg-white shadow-md rounded-lg h-56 flex flex-col justify-between transition-transform duration-300 hover:scale-105 hover:shadow-lg"
+                        onMouseEnter={() => { setHovered(true); setSelectedGame(game); }}
+                        onMouseLeave={() => setHovered(false)}
+                    >
+                        <div className="relative w-full h-2/3 overflow-hidden rounded-t-lg">
+                            <Image
+                                src={game.image}
+                                alt={game.name}
+                                fill
+                                objectFit="cover"
+                                className="absolute inset-0 w-full h-full"
+                            />
+                        </div>
+                        <div className="text-center h-1/3 p-2 flex flex-col justify-center">
+                            <p className="text-sm font-semibold mb-1">{game.name}</p>
+                            <span
+                                className={`text-xs px-2 py-1 rounded-full ${
+                                    game.tag === 'Beta'
+                                        ? 'bg-green-500 text-white'
+                                        : 'bg-gray-500 text-white'
+                                }`}
+                            >
+                                {game.tag}
+                            </span>
+                        </div>
+                    </div>
+                ))}
             </div>
-            <Image src="/fig/Fig1.jpg" alt="Black Myth: Wukong" width={300} height={200} className="image" />
-            <div className="description">Black Myth: Wukong - An action-adventure game based on Chinese mythology.</div>
-            <a href="/games/work1" className="button">Detail</a>
-          </div>
 
-          <div className="work">
-            <div className="work-header">
-              <span>Work 2</span>
-              {/* <span>${values[1]}</span> */}
+            {/* Arrow-Down */}
+            <div className={`absolute left-1/2 transform -translate-x-1/2 ${hovered ? 'animate-bounce' : ''}`}>
+                <svg
+                    className="w-8 h-8 text-gray-400 transition-transform duration-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
             </div>
-            <Image src="/fig/Fig2.jpg" alt="Super Mario" width={300} height={200} className="image" />
-            <div className="description">Super Mario - A classic platformer game featuring the iconic plumber.</div>
-            <a href="#" className="button">Detail</a>
-          </div>
+
+            {selectedGame && <GameDetails game={selectedGame} />}
         </div>
-
-        <div className="column">
-          <div className="title">My Games</div>
-
-          <div className="work">
-            <div className="work-header">
-              <span>Work 3</span>
-              {/* <span>${values[2]}</span> */}
-            </div>
-            <Image src="/fig/Fig3.jpg" alt="Pokémon" width={300} height={200} className="image" />
-            <div className="description">Pokémon - A role-playing game where players catch and train creatures.</div>
-            <a href="#" className="button">Detail</a>
-          </div>
-
-          <div className="work">
-            <div className="work-header">
-              <span>Work 4</span>
-              {/* <span>${values[3]}</span> */}
-            </div>
-            <Image src="/fig/Fig4.jpg" alt="Naraka: Bladepoint" width={300} height={200} className="image" />
-            <div className="description">Naraka: Bladepoint - A multiplayer action game with martial arts combat.</div>
-            <a href="#" className="button">Detail</a>
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        body {
-          font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 0;
-          background-color: #f9f9f9;
-          text-align: center;
-        }
-        .header {
-          background-color: #ccc;
-          padding: 10px;
-          font-weight: bold;
-        }
-        .container {
-          display: flex;
-          justify-content: center;
-          padding: 20px;
-        }
-        .column {
-          width: 45%;
-          padding: 10px;
-          text-align: center;
-        }
-        .title {
-          font-size: 1.2em;
-          margin-bottom: 10px;
-        }
-        .work {
-          margin-bottom: 20px;
-        }
-        .work-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 10px;
-          background-color: #e0e0e0;
-        }
-        .image {
-          width: 100%;
-          height: 200px;
-          object-fit: contain;
-          margin-top: 10px;
-        }
-        .description {
-          height: 120px;
-          background-color: #d3d3d3;
-          margin-top: 10px;
-          padding: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .button {
-          text-decoration: none;
-          background-color: #ccc;
-          padding: 10px 20px;
-          border-radius: 5px;
-          color: black;
-          font-weight: bold;
-          display: inline-block;
-          margin-top: 10px;
-        }
-      `}</style>
-    </div>
-    )
+    );
 }
