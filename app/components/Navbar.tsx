@@ -9,7 +9,7 @@ export default function Navbar() {
           {/* Left Section: Dice Icon + Title */}
           <div className="flex items-center space-x-2">
             <Link href="/" className="text-lg font-semibold">
-              Solana Game Collaboration Platform
+              Blockchain Amigos
             </Link>
           </div>
   

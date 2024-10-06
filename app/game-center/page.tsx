@@ -3,36 +3,18 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import GameDetails from './GameDetails';
-
-interface Game {
-    id: number;
-    name: string;
-    tag: string;
-    image: string;
-    description: string,
-}
+import gameData, { Game } from './gamesData';
 
 export default function CoCreator() {
     const [hovered, setHovered] = useState(false);
     const [selectedGame, setSelectedGame] = useState<Game | null>(null); // Define Game type here
-
-    const games: Game[] = [
-        { id: 1, name: 'Black :Wukong', tag: 'Beta', image: '/fig/Fig1.jpg', description: "" },
-        { id: 2, name: 'Super Mario', tag: 'Beta', image: '/fig/Fig2.jpg', description: "" },
-        { id: 3, name: 'Pokémon', tag: 'Beta', image: '/fig/Fig3.jpg', description: "" },
-        { id: 4, name: 'Naraka', tag: 'Beta', image: '/fig/Fig4.jpg', description: "" },
-        { id: 5, name: 'Frost Punk 2', tag: 'Beta', image: '/fig/frostpunk.png', description: "" },
-        { id: 6, name: 'Planet Coaster', tag: 'Alpha', image: '/fig/planet_coaster.png', description: "" },
-        { id: 7, name: 'Final Fantasy', tag: 'Beta', image: '/fig/fantasy.png', description: "" },
-        { id: 8, name: 'Cyberpunk', tag: 'Alpha', image: '/fig/cyberpunk.png', description: "" },
-    ];
 
     return (
         <div className="mx-20 my-5 text-gray-800">
             <h1 className="text-2xl font-bold text-gray-800 mb-5">Games Are Ready To Play</h1>
 
             <div className="grid grid-cols-8 gap-4 mb-5">
-                {games.map((game) => (
+                {gameData.map((game) => (
                     <div
                         key={game.id}
                         className="bg-white shadow-md rounded-lg h-56 flex flex-col justify-between transition-transform duration-300 hover:scale-105 hover:shadow-lg"

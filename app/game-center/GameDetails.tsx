@@ -1,4 +1,7 @@
 import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay, faDownload } from '@fortawesome/free-solid-svg-icons';
+
 
 interface GameDetailsProps {
   game: {
@@ -12,7 +15,7 @@ interface GameDetailsProps {
 
 const GameDetails: React.FC<GameDetailsProps> = ({ game }) => {
   return (
-    <div className="mt-10 space-y-10">
+    <div className="mt-12 space-y-10">
       {/* Basic Information and Latest Version Section */}
       <div className="flex justify-between space-x-10 pt-5">
         {/* Left Section */}
@@ -27,13 +30,18 @@ const GameDetails: React.FC<GameDetailsProps> = ({ game }) => {
         <div className="w-1/2 p-6 bg-white shadow-lg ">
           <h2 className="text-xl font-semibold text-gray-700 mb-6">Latest Version</h2>
           <p className="mb-4"><strong>Version Code:</strong> 1.2.2</p>
-          <Image src={game.versionImage} alt="Version Tree" width={300} height={200} className="mb-4" />
-          <button className="px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-600 transition w-full">
-            Play 
-          </button>
-          <button className="px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-600 transition w-full">
+          <Image src={'/fig/relations.png'} alt="Version Tree" width={300} height={200} className="mb-4 mx-auto" />
+          <div className="flex gap-4 mb-4">
+            <button className="px-4 py-2 bg-green-600 text-white hover:bg-green-500 transition w-2/3 flex justify-center items-center gap-2">
+            <FontAwesomeIcon icon={faPlay} />
+            Play
+            </button>
+            <button className="px-4 py-2 bg-white text-gray-800 rounded hover:bg-gray-100 transition w-1/3 flex justify-center items-center gap-2">
+            <FontAwesomeIcon icon={faDownload} />
             Download
-          </button>
+            </button>
+        </div>
+    
           <p className="mt-4 text-gray-600">
             Handling different versions: Synchronizing features and maintaining stability across versions.
           </p>

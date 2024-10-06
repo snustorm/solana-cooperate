@@ -25,3 +25,37 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Arrow Animation */
+.animate-bounce {
+    animation: bounce 1s ease-in-out forwards;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(10px);
+    }
+}
+
+.typewriter {
+    font-size: 1.25rem;
+    font-family: 'Courier', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 2px solid;
+    width: 25ch;
+    animation: typing 3.5s steps(25) normal forwards, blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 150ch }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: black }
+}

@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons'; 
 import MintModal from '../tokenmint/MintModal';
-import { string } from '@metaplex-foundation/umi/serializers';
 import { sendToken } from '../transaction/sendToken';
 import { PublicKey } from '@solana/web3.js';
-import { Wallet } from '@project-serum/anchor';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
 
@@ -22,7 +20,7 @@ interface CaseCardProps {
     onDelete: (caseId: number) => void;
 }
 
-const CaseCard: React.FC<CaseCardProps> = ({ caseItem, onUpdate, onDelete }) => {
+const CaseCard: React.FC<CaseCardProps> = ({ caseItem}) => {
     
     const [isModalOpen, setModalOpen] = useState(false);
     const [tokenData, setTokenData] = useState(null);
@@ -75,21 +73,7 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseItem, onUpdate, onDelete }) => 
                 <p className="text-sm text-gray-500 mb-4">{caseItem.category}</p>
                 <p className="text-gray-700 flex-grow">{caseItem.description}</p>
                 
-                <div className="flex mt-4">
-                    <button
-                        className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-                        onClick={() => onUpdate(caseItem)}
-                    >
-                        Update
-                    </button>
-
-                    <button
-                        onClick={() => onDelete(caseItem.caseId)}
-                        className="ml-4 text-red-500"
-                    >
-                        Delete
-                    </button>
-                </div>
+       
             </div>
             
             <div className='bg-gray-100 p-4 flex justify-between items-center'>

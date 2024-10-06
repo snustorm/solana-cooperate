@@ -230,7 +230,7 @@ export default function CreateCase() {
 
                         {/* File Upload */}
                         <div>
-                            <label htmlFor="caseFile" className="block text-sm font-medium text-gray-700 mb-1">Upload a File</label>
+                            <label htmlFor="caseFile" className="block text-sm font-medium text-gray-700 mb-1">Upload a File (Game file, Photo image..) </label>
                             <input
                                 type="file"
                                 name="caseFile"
