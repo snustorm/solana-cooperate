@@ -35,13 +35,14 @@ import {
       try {
           // Fetch or create associated token accounts for both buyer and seller
           console.log(`Sending ${transferAmount} tokens from ${FROM_KEYPAIR.publicKey.toString()} to ${destinationWalletPubKey.toString()}`);
+          console.log("mint address: ", mintAddress.toBase58());
   
           // Step 1: Get Source Token Account
           console.log('1 - Getting Source Token Account');
           const sourceAccount = await getOrCreateAssociatedTokenAccount(
               SOLANA_CONNECTION,
               FROM_KEYPAIR,
-              mintAddress,  // Mint address for the token
+              mintAddress,  
               FROM_KEYPAIR.publicKey
           );
           console.log(`   Source Account: ${sourceAccount.address.toString()}`);

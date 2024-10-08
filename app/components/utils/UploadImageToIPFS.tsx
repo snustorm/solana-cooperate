@@ -30,7 +30,14 @@ export const pinFileToIPFS = async (file: File) => {
         }
       });
       console.log('Pinata response:', res.data);
-      return res.data;
+      
+      let response = res.data;
+      if(response?.IpfsHash) {
+            return `https://gateway.pinata.cloud/ipfs/${response.IpfsHash}`;
+      } else {
+            return null;
+    }  
+
     } catch (error) {
       console.error('Error uploading file to Pinata:', error);
        return null;

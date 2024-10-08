@@ -4,9 +4,10 @@ import { TokenStandard, createAndMint, mplTokenMetadata } from '@metaplex-founda
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 import secret from './guideSecret.json';
 import { pinFileToIPFS, pinJSONToIPFS } from '../utils/UploadImageToIPFS';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 // Function to mint the token
-export const mintToken = async (name: string, symbol: string, totalSupply: number) => {
+export const mintToken = async (name: string, symbol: string, description: string, imageUrl: string, totalSupply: number) => {
     try {
         const umi = createUmi('https://api.devnet.solana.com');
         const userWallet = umi.eddsa.createKeypairFromSecretKey(new Uint8Array(secret));
@@ -15,8 +16,8 @@ export const mintToken = async (name: string, symbol: string, totalSupply: numbe
         const metadata = {
             name,
             symbol,
-            description: `This is the ${name} token!`,
-            image: "https://blue-legal-cicada-830.mypinata.cloud/ipfs/QmX893XSvqMgqsbyjGT2kY3vHpUxRg3T5D1sPCAeGyKJL1" // Placeholder, will be updated later
+            description,
+            imageUrl
         };
 
         const mint = generateSigner(umi);
@@ -44,7 +45,7 @@ export const mintToken = async (name: string, symbol: string, totalSupply: numbe
             uri: metadataUri,
             sellerFeeBasisPoints: percentAmount(0),
             decimals: 8,
-            amount: totalSupply,
+            amount: totalSupply * LAMPORTS_PER_SOL,
             tokenOwner: userWallet.publicKey,
             tokenStandard: TokenStandard.Fungible,
         }).sendAndConfirm(umi);

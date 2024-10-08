@@ -23,7 +23,6 @@ const connection = new Connection(network, 'confirmed');
 const provider = new AnchorProvider(connection, window.solana, { commitment: 'confirmed' });
 
 
-
 export default function CreateCase() {
     
     const { connected, publicKey } = useWallet();
@@ -89,7 +88,6 @@ export default function CreateCase() {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        //获取数据
         const formData = new FormData(event.target as HTMLFormElement);
         const title = formData.get('caseTitle') as string;
         const description = formData.get('caseDescription') as string;
@@ -99,35 +97,20 @@ export default function CreateCase() {
         const imageFile = formData.get('imageFile') as File;
         const caseFile = formData.get('caseFile') as File;
 
-        // const imageFile = "http://localhost:3000/create-case";
-        // const caseFile = "http://localhost:3000/create-case";
 
         let finalImageUrl;
         let finalCaseFile;
 
         if (imageFile) {
-            console.log("Image detected");
-            const response = await pinFileToIPFS(imageFile);
-            if(response?.IpfsHash) {
-                finalImageUrl = `https://gateway.pinata.cloud/ipfs/${response.IpfsHash}`;
-                console.log("New Image URL from IPFS: ", finalImageUrl);
-            } else {
-                return null;
-            }  
+            finalImageUrl = await pinFileToIPFS(imageFile);
         } 
 
         if (caseFile) {
-            console.log("Image detected");
-            const response = await pinFileToIPFS(caseFile);
-            if(response?.IpfsHash) {
-                finalCaseFile = `https://gateway.pinata.cloud/ipfs/${response.IpfsHash}`;
-                console.log("New Case File URL from IPFS: ", finalCaseFile);
-            } else {
-                return null;
-            } 
+            finalCaseFile = await pinFileToIPFS(caseFile);
         } 
 
         try{
+            console.log("create file...");
             const tx = await program?.methods.createCase(title, description, category, finalImageUrl, finalCaseFile)
                 .accounts({
                     case: getCaseAddress(caseId + 1), // Public key of the case account
@@ -139,8 +122,6 @@ export default function CreateCase() {
         
             await confirmTx(tx, connection);
             updateState();
-
-            toast.success("Lottery Created!");
         
             // Handle form data including file upload
             console.log('Case created!', formData.get('caseFile'));

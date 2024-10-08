@@ -145,7 +145,8 @@ export default function CoCreator() {
         fetchCases(); // Fetch cases on mount
     }, [wallet, connection]);
 
-    const truncatePublicKey = (key: string) => {
+    const truncatePublicKey = (key: string | undefined) => {
+        if (!key || key.length < 6) return "N/A"; // Handle undefined or invalid keys
         return key.slice(0, 3) + '...' + key.slice(-3);
     };
 

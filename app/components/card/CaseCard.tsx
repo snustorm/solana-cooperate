@@ -1,64 +1,60 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons'; 
-import MintModal from '../tokenmint/MintModal';
-import { sendToken } from '../transaction/sendToken';
-import { PublicKey } from '@solana/web3.js';
-import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { useState } from "react";
+import MintModal from '../tokenmint/MintModal'; 
+import InfoModal from '../tokenmint/InfoModal'; 
+import { PublicKey } from '@solana/web3.js'; // Ensure to import this
+import { sendToken } from '../transaction/sendToken'; // Update the path
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
 
 
-
-interface CaseCardProps {
-    caseItem: {
-        caseId: number;
-        title: string;
-        category: string;
-        description: string;
-        imageUrl: string;
-    };
-    onUpdate: (caseItem: any) => void;
-    onDelete: (caseId: number) => void;
-}
-
-const CaseCard: React.FC<CaseCardProps> = ({ caseItem}) => {
-    
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [tokenData, setTokenData] = useState(null);
-    const [isMinted, setIsMinted] = useState(false); // New state for mint status
-    const [ticker, setTicker] = useState(''); // New ss
-    const [versions, setVersions] = useState([]); // Start with an empty array
-    const [isBuying, setIsBuying] = useState(false); 
+export default function CaseCard({ caseItem }) {
+    const [isInfoModalOpen, setInfoModalOpen] = useState(false); 
+    const [isMintModalOpen, setMintModalOpen] = useState(false); 
+    const [isBuying, setIsBuying] = useState(false);
+    const [tokenInfo, setTokenInfo] = useState(null); 
+    const [isMinted, setIsMinted] = useState(false);
+    const [showSuccessNotice, setShowSuccessNotice] = useState(false);
 
     const wallet = useAnchorWallet();
 
-    const handleAddVersion = () => {
-        const newVersion = `Version ${versions.length + 2}.0.0`; // Start from 2.0
-        setVersions([...versions, { version: newVersion }]);
+    const handleOpenInfoModal = () => {
+        setInfoModalOpen(true); 
+    };
+
+    const handleOpenMintModal = () => {
+        setInfoModalOpen(false); 
+        setMintModalOpen(true);  
+    };
+
+    const handleMintToken = (tokenInfo) => {
+        console.log("Token minted successfully:", tokenInfo);
+        setTokenInfo(tokenInfo); 
+        setIsMinted(true); 
+        setMintModalOpen(false); 
     };
 
     const handleBuyToken = async () => {
+        if (!tokenInfo) return;
+
+        setIsBuying(true);
 
         try {
-            setIsBuying(true);  // Set loading state
+            const mintAddress = new PublicKey(tokenInfo.mintPublicKey);
+            const destinationWalletPubKey = wallet?.publicKey; // Buyer's wallet address
+            const transferAmount = 1; // Specify the amount to transfer (adjust as needed)
 
-            // Call sendToken method with mint address and amount (assuming 1 for this example)
-            const mintAddress = tokenData?.mintPublicKey; // Get mint address from token data
-            const amount = 100; // Define the amount you want to send
+            const tx = await sendToken(mintAddress, transferAmount, destinationWalletPubKey);
+            console.log('Token purchased successfully');
 
-            const signature = await sendToken(new PublicKey(mintAddress), amount, wallet?.publicKey); // Call sendToken
-            alert(`Transaction successful! Tx: ${signature}`);
+            // Show success notice
+            setShowSuccessNotice(true);
+
+            // Hide notice after 3 seconds
+            setTimeout(() => setShowSuccessNotice(false), 8000);
         } catch (error) {
             console.error('Error buying token:', error);
-            alert('Transaction failed!');
         } finally {
-            setIsBuying(false);  // Reset loading state
+            setIsBuying(false);
         }
-    };
-
-    const handleMintToken = (tokenInfo: any) => {
-        setTokenData(tokenInfo); // Save the token data in state
-        setIsMinted(true); // Set minted status to true
-        setTicker(ticker); 
     };
 
     return (
@@ -67,56 +63,77 @@ const CaseCard: React.FC<CaseCardProps> = ({ caseItem}) => {
                 <img
                     src={caseItem.imageUrl}
                     alt={caseItem.title}
-                    className="w-full object-cover rounded-md mb-4 "
+                    className="w-full object-cover rounded-md mb-4"
                 />
                 <h2 className="text-2xl font-semibold mb-2">{caseItem.title}</h2>
                 <p className="text-sm text-gray-500 mb-4">{caseItem.category}</p>
                 <p className="text-gray-700 flex-grow">{caseItem.description}</p>
-                
-       
             </div>
             
             <div className='bg-gray-100 p-4 flex justify-between items-center'>
                 <span className="text-sm">Version 1.0.0</span>
                 <div className="flex items-center">
-                    <FontAwesomeIcon icon={faPlus} className="mr-2 cursor-pointer text-gray-500" onClick={handleAddVersion} />
                     {isMinted ? (
                         <button 
                             className="bg-green-600 text-white text-sm px-3 py-1 rounded-full hover:bg-green-700"
-                            onClick={handleBuyToken} // Call handleBuyToken when buying
-                            disabled={isBuying} // Disable while processing
+                            onClick={handleBuyToken} 
+                            disabled={isBuying}
                         >
-                            {isBuying ? 'Processing...' : `Buy ${tokenData?.metadata.symbol}`}
+                            {isBuying ? 'Processing...' : `Buy $${tokenInfo?.metadata.symbol}`}
                         </button>
                     ) : (
-                        <button className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full hover:bg-blue-700" onClick={() => setModalOpen(true)}>
+                        <button className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full hover:bg-blue-700" onClick={handleOpenInfoModal}>
                             Mint Token
                         </button>
                     )}
                 </div>
             </div>
 
-            {versions.length > 0 && versions.map((v, index) => (
-                <div key={index} className="bg-gray-100 p-4 flex justify-between items-center">
-                    <span className="text-sm">{v.version}</span>
-                    <button className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full hover:bg-blue-700 focus:outline-none"
-                        onClick={() => setModalOpen(true)}>
-                        Mint Token
-                    </button>
+            {/* Info Modal */}
+            <InfoModal
+                isOpen={isInfoModalOpen}
+                onClose={() => setInfoModalOpen(false)}
+                onUnderstand={handleOpenMintModal}
+            />
+
+            {/* Mint Token Modal */}
+            <MintModal
+                isOpen={isMintModalOpen}
+                onClose={() => setMintModalOpen(false)}
+                onMintToken={handleMintToken}
+            />
+
+            {tokenInfo && (         
+                <div className="token-info p-4 break-words text-xs bg-gray-100">
+                    <div className="flex items-center space-x-2">
+                        <img 
+                            src={tokenInfo.metadata.imageUrl} 
+                            alt={tokenInfo.metadata.name} 
+                            className="w-6 h-6 object-cover rounded-full"
+                        />
+                        <span className="font-semibold">
+                            {tokenInfo.metadata.name} ({tokenInfo.metadata.symbol})
+                        </span>
+                    </div>
+                    
+                    <div className="mt-2">
+                        <a 
+                            href={`https://explorer.solana.com/address/${tokenInfo.mintPublicKey}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-blue-500 hover:underline"
+                        >
+                            {tokenInfo.mintPublicKey}
+                        </a>
+                    </div>
                 </div>
-            ))}
-
-        <MintModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} onMintToken={handleMintToken} />
-
-        {tokenData && (         
-            <div className="token-info">
-                <p>Token Name: {tokenData.metadata.name}</p>
-                <p>Token Symbol: {tokenData.metadata.symbol}</p>
-                <p>Token Address: {tokenData.mintPublicKey.toString()}</p>
-            </div>
-        )}
+            )}
+            {showSuccessNotice && (
+                <div className="fixed top-6 right-6 bg-white p-6 rounded-lg shadow-lg">
+                    <p className="text-gray-700">🎉 Token purchased successfully!</p>
+                    <p className="text-gray-400">Please check your wallet </p>
+                </div>
+            )}
         </div>
     );
-};
-
-export default CaseCard;
+}
